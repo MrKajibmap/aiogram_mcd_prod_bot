@@ -173,7 +173,8 @@ async def show_errors(message: Message):
 async def show_errors(message: Message):
     cursor = connection.cursor()
     await message.answer(
-        text='Я отправлю реквест в базу данных для извлечения свежей статистики по краткосрочному процессу прогнозирования за сегодня '
+        text='Я отправлю реквест в базу данных для извлечения свежей статистики по краткосрочному процессу '
+             'прогнозирования за сегодня '
              '(ограничение = '
              '30 записей), ждите!')
     cursor.execute("""select t1.* from
@@ -227,7 +228,6 @@ async def errors_keyboard():
     err_processes = get_errors_list_nms()
     if len(get_errors_list_nms()) > 0:
         for resource in err_processes:
-            # button_text = resource
             markup.add(InlineKeyboardButton(resource, callback_data=resource))
             return markup
 
@@ -270,9 +270,6 @@ async def callback_inline(call):
         markup.add(InlineKeyboardButton('Перезапустить', callback_data=f'{call.data}+res_act_rerun'))
         markup.add(InlineKeyboardButton('Закрыть', callback_data=f'{call.data}+res_act_close'))
         markup.add(InlineKeyboardButton('Пропустить', callback_data=f'{call.data}+res_act_skip'))
-        # удаляем клавиатуру старую
-        # await bot.edit_message_reply_markup(call.from_user.id, message_id=call.message.message_id,
-        #                                      reply_markup='')
         # заряжаем новую
         await bot.edit_message_text(
             chat_id=call.from_user.id,
@@ -288,7 +285,8 @@ async def callback_inline(call):
                 await bot.edit_message_text(
                     chat_id=call.from_user.id,
                     message_id=call.message.message_id,
-                    text=f"<b>Статус процесса {call_data.split('+')[0]} был обновлен с 'E' на 'А'.</b>\n\nПроцессы, завершившиеся с ошибками: \n",
+                    text=f"<b>Статус процесса {call_data.split('+')[0]} был обновлен с 'E' на 'А'.</b>\n\nПроцессы, "
+                         f"завершившиеся с ошибками: \n",
                     reply_markup=await errors_keyboard()
                 )
             elif len(get_errors_list_nms()) == 0:
@@ -296,7 +294,8 @@ async def callback_inline(call):
                 await bot.edit_message_text(
                     chat_id=call.from_user.id,
                     message_id=call.message.message_id,
-                    text=f"<b>Статус процесса {call_data.split('+')[0]} был обновлен с 'E' на 'А'.</b>\n\n<b>Отсутствуют процессы, завершившиеся с ошибками.</b>",
+                    text=f"<b>Статус процесса {call_data.split('+')[0]} был обновлен с 'E' на "
+                         f"'А'.</b>\n\n<b>Отсутствуют процессы, завершившиеся с ошибками.</b>",
                     reply_markup=''
                 )
         elif call_data.split('+')[1] == 'res_act_close':
@@ -306,14 +305,16 @@ async def callback_inline(call):
                 await bot.edit_message_text(
                     chat_id=call.from_user.id,
                     message_id=call.message.message_id,
-                    text=f"Статус процесса {call_data.split('+')[0]} был обновлен с 'E' на 'С'.</b>\n\nПроцессы, завершившиеся с ошибками: \n",
+                    text=f"<b>Статус процесса {call_data.split('+')[0]} был обновлен с 'E' на 'С'.</b>\n\nПроцессы, "
+                         f"завершившиеся с ошибками: \n",
                     reply_markup=await errors_keyboard()
                 )
             elif len(get_errors_list_nms()) == 0:
                 await bot.edit_message_text(
                     chat_id=call.from_user.id,
                     message_id=call.message.message_id,
-                    text=f"Статус процесса {call_data.split('+')[0]} был обновлен с 'E' на 'С'.</b>\n\nОтсутствуют процессы, завершившиеся с ошибками.\n",
+                    text=f"<b>Статус процесса {call_data.split('+')[0]} был обновлен с 'E' на 'С'.</b>\n\n<b>Отсутствуют "
+                         f"процессы, завершившиеся с ошибками.</b>\n",
                     reply_markup=await errors_keyboard()
                 )
         elif call_data.split('+')[1] == 'res_act_skip':
@@ -322,13 +323,15 @@ async def callback_inline(call):
                 await bot.edit_message_text(
                     chat_id=call.from_user.id,
                     message_id=call.message.message_id,
-                    text=f"<b>Действий к ресурсу {call_data.split('+')[0]} не применялось.</b>\n\nПроцессы, завершившиеся с ошибками: \n",
+                    text=f"<b>Действий к ресурсу {call_data.split('+')[0]} не применялось.</b>\n\nПроцессы, "
+                         f"завершившиеся с ошибками: \n",
                     reply_markup=await errors_keyboard()
                 )
             elif len(get_errors_list_nms()) == 0:
                 await bot.edit_message_text(
                     chat_id=call.from_user.id,
                     message_id=call.message.message_id,
-                    text=f"<b>Действий к ресурсу {call_data.split('+')[0]} не применялось.</b>\n\nОтсутствуют процессы, завершившиеся с ошибками.\n",
+                    text=f"<b>Действий к ресурсу {call_data.split('+')[0]} не применялось.</b>\n\n<b>Отсутствуют "
+                         f"процессы, завершившиеся с ошибками.</b>\n",
                     reply_markup=await errors_keyboard()
                 )
