@@ -16,7 +16,7 @@ connection = psycopg2.connect(database=db_info.get('NAME'),
                               port=db_info.get('PORT'))
 
 if __name__ == '__main__':
-    from handlers import dp, send_to_admin
-
-    executor.start_polling(dispatcher=dp, on_startup=send_to_admin)
-
+    # from handlers import dp, send_to_admin
+    #
+    # executor.start_polling(dispatcher=dp, on_startup=send_to_admin)
+    import time
